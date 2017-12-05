@@ -2,10 +2,11 @@ package notify
 
 import (
 	"errors"
+	"event"
 	"fmt"
-	"github.com/ouqiang/gocron/modules/httpclient"
-	"github.com/ouqiang/supervisor-event-listener/event"
-	"github.com/ouqiang/supervisor-event-listener/utils"
+	"utils"
+
+	"utils/httpclient"
 )
 
 type Slack struct{}

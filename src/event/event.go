@@ -3,10 +3,10 @@ package event
 import (
 	"errors"
 	"fmt"
-	"github.com/ouqiang/supervisor-event-listener/utils"
 	"os"
 	"strconv"
 	"strings"
+	"utils"
 )
 
 // Message 消息格式

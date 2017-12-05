@@ -4,10 +4,11 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/ouqiang/supervisor-event-listener/event"
-	"github.com/ouqiang/supervisor-event-listener/listener/notify"
 	"log"
 	"os"
+
+	"event"
+	"listener/notify"
 )
 
 var (
@@ -38,6 +39,7 @@ func listen() {
 			failure(err)
 			continue
 		}
+
 		// 只处理进程异常退出事件
 		if header.EventName == "PROCESS_STATE_EXITED" {
 			notify.Push(header, payload)

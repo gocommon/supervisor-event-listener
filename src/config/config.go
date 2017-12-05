@@ -3,10 +3,12 @@ package config
 import (
 	"flag"
 	"fmt"
-	"github.com/ouqiang/supervisor-event-listener/utils"
-	"gopkg.in/ini.v1"
 	"os"
 	"strings"
+
+	"utils"
+
+	ini "gopkg.in/ini.v1"
 )
 
 type Config struct {
@@ -15,6 +17,7 @@ type Config struct {
 	MailServer MailServer
 	MailUser   MailUser
 	Slack      Slack
+	Events     []string
 }
 
 type WebHook struct {
@@ -70,7 +73,13 @@ func ParseConfig() *Config {
 		config.WebHook = parseWebHook(section)
 	}
 
+	config.Events = parseEvents(section)
 	return config
+}
+
+func parseEvents(section *ini.Section) []string {
+	s := section.Key("events").String()
+	return strings.Split(s, ",")
 }
 
 func parseMailServer(section *ini.Section) MailServer {

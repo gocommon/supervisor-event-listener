@@ -2,10 +2,11 @@ package notify
 
 import (
 	"errors"
+	"event"
 	"fmt"
-	"github.com/go-gomail/gomail"
-	"github.com/ouqiang/supervisor-event-listener/event"
 	"strings"
+
+	"github.com/go-gomail/gomail"
 )
 
 type Mail struct{}

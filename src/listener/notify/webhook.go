@@ -3,9 +3,9 @@ package notify
 import (
 	"encoding/json"
 	"errors"
+	"event"
 	"fmt"
-	"github.com/ouqiang/supervisor-event-listener/event"
-	"github.com/ouqiang/supervisor-event-listener/utils/httpclient"
+	"utils/httpclient"
 )
 
 type WebHook struct{}
