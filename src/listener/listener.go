@@ -40,10 +40,13 @@ func listen() {
 			continue
 		}
 
-		// 只处理进程异常退出事件
-		if header.EventName == "PROCESS_STATE_EXITED" {
-			notify.Push(header, payload)
+		// 支持多事件
+		for i := range notify.Conf.Events {
+			if notify.Conf.Events[i] == header.EventName {
+				notify.Push(header, payload)
+			}
 		}
+
 		success()
 	}
 }

@@ -12,12 +12,17 @@ import (
 )
 
 type Config struct {
-	NotifyType string
+	NotifyType []string // 多类型,逗号分隔
 	WebHook    WebHook
 	MailServer MailServer
 	MailUser   MailUser
 	Slack      Slack
 	Events     []string
+	Shell      Shell
+}
+
+type Shell struct {
+	Command string
 }
 
 type WebHook struct {
@@ -54,32 +59,51 @@ func ParseConfig() *Config {
 	if err != nil {
 		Exit("读取配置文件失败#" + err.Error())
 	}
-	section := file.Section("default")
-	notifyType := section.Key("notify_type").String()
-	notifyType = strings.TrimSpace(notifyType)
-	if !utils.InStringSlice([]string{"mail", "slack", "webhook"}, notifyType) {
-		Exit("不支持的通知类型-" + notifyType)
-	}
 
 	config := &Config{}
-	config.NotifyType = notifyType
-	switch notifyType {
-	case "mail":
-		config.MailServer = parseMailServer(section)
-		config.MailUser = parseMailUser(section)
-	case "slack":
-		config.Slack = parseSlack(section)
-	case "webhook":
-		config.WebHook = parseWebHook(section)
+
+	section := file.Section("default")
+	notifyType := section.Key("notify_type").Strings(",")
+	for i := range notifyType {
+		notifyType[i] = strings.TrimSpace(notifyType[i])
+		if !utils.InStringSlice([]string{"mail", "slack", "webhook", "shell"}, notifyType[i]) {
+			Exit("不支持的通知类型-" + notifyType[i])
+		}
+
+		switch notifyType[i] {
+		case "mail":
+			config.MailServer = parseMailServer(section)
+			config.MailUser = parseMailUser(section)
+		case "slack":
+			config.Slack = parseSlack(section)
+		case "webhook":
+			config.WebHook = parseWebHook(section)
+		case "shell":
+			config.Shell = parseShell(section)
+		}
+
 	}
 
-	config.Events = parseEvents(section)
+	config.NotifyType = notifyType
+
+	events := section.Key("events").Strings(",")
+	for i := range events {
+		events[i] = strings.TrimSpace(events[i])
+	}
+
+	if len(events) == 0 {
+		Exit("监听事件未配置")
+	}
+
+	config.Events = events
 	return config
 }
 
-func parseEvents(section *ini.Section) []string {
-	s := section.Key("events").String()
-	return strings.Split(s, ",")
+func parseShell(section *ini.Section) Shell {
+	s := Shell{}
+	s.Command = section.Key("shell.command").String()
+
+	return s
 }
 
 func parseMailServer(section *ini.Section) MailServer {

@@ -33,18 +33,24 @@ func start() {
 	var notifyHandler Notifiable
 	for {
 		message = <-queue
-		switch Conf.NotifyType {
-		case "mail":
-			notifyHandler = &Mail{}
-		case "slack":
-			notifyHandler = &Slack{}
-		case "webhook":
-			notifyHandler = &WebHook{}
+
+		for i := range Conf.NotifyType {
+			switch Conf.NotifyType[i] {
+			case "mail":
+				notifyHandler = &Mail{}
+			case "slack":
+				notifyHandler = &Slack{}
+			case "webhook":
+				notifyHandler = &WebHook{}
+			case "shell":
+				notifyHandler = &Shell{}
+			}
+			if notifyHandler == nil {
+				continue
+			}
+			go send(notifyHandler, message)
 		}
-		if notifyHandler == nil {
-			continue
-		}
-		go send(notifyHandler, message)
+
 		time.Sleep(1 * time.Second)
 	}
 }
