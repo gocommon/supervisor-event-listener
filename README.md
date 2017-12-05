@@ -5,11 +5,6 @@ Supervisor事件通知, 支持邮件, Slack, WebHook
 Supervisor是*nix环境下的进程管理工具, 可以把前台进程转换为守护进程, 当进程异常退出时自动重启.  
 supervisor-event-listener监听进程异常退出事件, 并发送通知.
   
-## 下载
-[v1.0](https://github.com/ouqiang/supervisor-event-listener/releases)
-
-### 源码安装
-* `go get -u github.com/ouqiang/supervisor-event-listener`
 
 ## Supervisor配置
 ```ini
