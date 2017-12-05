@@ -54,7 +54,7 @@ fi
 
 echo '开始编译'
 
-GOOS=$OS GOARCH=$ARCH go build -ldflags '-w'
+GOOS=$OS GOARCH=$ARCH gb build -ldflags '-w'
 
 if [[ $? != 0 ]];then
     exit 1
@@ -62,7 +62,7 @@ fi
 echo '编译完成'
 
 
-EXEC_NAME=${APP_NAME}
+EXEC_NAME=${APP_NAME}-${OS}-${ARCH}
 COMPRESS_FILE=${APP_NAME}-${OS}-${ARCH}.tar.gz
 
 mkdir -p $TEMP_DIR/$APP_NAME
@@ -74,12 +74,9 @@ fi
 PACKAGE_FILENAME=(supervisor-event-listener.ini ${EXEC_NAME})
 
 echo '复制文件到临时目录'
-# 复制文件到临时目录
-for i in ${PACKAGE_FILENAME[*]}
-do
-    cp -r $i $TEMP_DIR/$APP_NAME
-done
 
+cp -r ./supervisor-event-listener.ini $TEMP_DIR/$APP_NAME
+cp -r ./bin/${EXEC_NAME} $TEMP_DIR/$APP_NAME
 
 echo '压缩文件'
 # 压缩文件
@@ -89,7 +86,7 @@ tar czf $COMPRESS_FILE *
 mv $COMPRESS_FILE ../
 cd ../
 
-rm $EXEC_NAME
+rm ./bin/${EXEC_NAME}
 rm -rf $TEMP_DIR
 
 echo '打包完成'
