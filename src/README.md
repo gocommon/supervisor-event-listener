@@ -18,7 +18,7 @@ supervisor-event-listener监听进程异常退出事件, 并发送通知.
 command=/path/to/supervisor-event-listener
 ; 指定配置文件路径
 ;command=/path/to/supervisor-event-listener -c /path/to/supervisor-event-listener.ini
-events=PROCESS_STATE_EXITED
+events=PROCESS_STATE
 ......
 ```
 
@@ -26,7 +26,10 @@ events=PROCESS_STATE_EXITED
 
 ```ini 
 [default]
-# 通知类型 mail,slack,webhook 只能选择一种
+
+debug = true
+
+# 通知类型 mail,slack,webhook,shell 多种，逗号分隔
 notify_type = mail
 
 # 邮件服务器配置
@@ -44,6 +47,12 @@ slack.channel = exception
 
 # WebHook通知URL配置 
 webhook_url = http://my.webhook.com
+
+# shell 脚本，会传递 eventname  playload ,  例/bin/echo eventname ip ProcessName GroupName FromState Expected Pid. 见 restart.sh
+shell.command = "/bin/echo"
+
+# 监听事件，逗号分隔
+events = PROCESS_STATE_EXITED,PROCESS_STATE_RUNNING
 
 ```
 
