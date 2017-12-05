@@ -40,6 +40,10 @@ func listen() {
 			continue
 		}
 
+		if notify.Conf.Debug {
+			fmt.Fprintln(os.Stderr, "got event: ", header, payload)
+		}
+
 		// 支持多事件
 		for i := range notify.Conf.Events {
 			if notify.Conf.Events[i] == header.EventName {

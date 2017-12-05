@@ -48,6 +48,11 @@ func start() {
 			if notifyHandler == nil {
 				continue
 			}
+
+			if Conf.Debug {
+				fmt.Fprintln(os.Stderr, "notify send: ", Conf.NotifyType[i])
+			}
+
 			go send(notifyHandler, message)
 		}
 

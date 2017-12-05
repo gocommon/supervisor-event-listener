@@ -12,6 +12,7 @@ import (
 )
 
 type Config struct {
+	Debug      bool
 	NotifyType []string // 多类型,逗号分隔
 	WebHook    WebHook
 	MailServer MailServer
@@ -63,6 +64,9 @@ func ParseConfig() *Config {
 	config := &Config{}
 
 	section := file.Section("default")
+
+	config.Debug = section.Key("debug").MustBool(false)
+
 	notifyType := section.Key("notify_type").Strings(",")
 	for i := range notifyType {
 		notifyType[i] = strings.TrimSpace(notifyType[i])
